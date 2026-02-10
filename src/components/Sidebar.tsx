@@ -13,6 +13,8 @@ import { Calculator, Users, Building2, DollarSign, TrendingUp, Briefcase, Settin
 interface SidebarProps {
   inputs: DashboardInputs
   updateInput: <K extends keyof DashboardInputs>(key: K, value: DashboardInputs[K]) => void
+  isOpen?: boolean
+  onClose?: () => void
 }
 
 const cities = [
@@ -27,19 +29,46 @@ const cities = [
   'Remote (distributed)',
 ]
 
-export function Sidebar({ inputs, updateInput }: SidebarProps) {
+export function Sidebar({ inputs, updateInput, isOpen = true, onClose }: SidebarProps) {
   return (
-    <div className="w-full max-w-sm bg-white border-r border-slate-200 h-screen overflow-y-auto shadow-sm">
+    <>
+      {/* Mobile overlay */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black/40 z-40 lg:hidden"
+          onClick={onClose}
+        />
+      )}
+      <div className={`
+        fixed lg:relative z-50 lg:z-auto
+        w-[85vw] max-w-sm bg-white border-r border-slate-200 h-screen overflow-y-auto shadow-sm
+        transition-transform duration-300 ease-in-out
+        ${isOpen ? 'translate-x-0' : '-translate-x-full'}
+        lg:translate-x-0
+      `}>
       <div className="p-6">
         <div className="mb-6">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-cyan-500 flex items-center justify-center shadow-lg shadow-blue-500/20">
-              <Calculator className="w-5 h-5 text-white" />
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-cyan-500 flex items-center justify-center shadow-lg shadow-blue-500/20">
+                <Calculator className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <h1 className="text-lg font-bold text-slate-900">Raise Planner</h1>
+                <p className="text-xs text-slate-500">Sigtrip</p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-lg font-bold text-slate-900">Raise Planner</h1>
-              <p className="text-xs text-slate-500">Sigtrip</p>
-            </div>
+            {onClose && (
+              <button
+                onClick={onClose}
+                className="lg:hidden p-2 rounded-lg hover:bg-slate-100 text-slate-500"
+                aria-label="Close sidebar"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            )}
           </div>
           <p className="text-xs text-slate-500 leading-relaxed">
             The Distribution Layer for the AI Travel Economy
@@ -320,6 +349,15 @@ export function Sidebar({ inputs, updateInput }: SidebarProps) {
               format={(v) => `$${v}`}
               onChange={(v) => updateInput('avgBookingValue', v)}
             />
+            <SliderField
+              label="Avg length of stay (nights)"
+              value={inputs.avgLengthOfStay}
+              min={1}
+              max={14}
+              step={1}
+              format={(v) => `${v}`}
+              onChange={(v) => updateInput('avgLengthOfStay', v)}
+            />
           </div>
         </Section>
 
@@ -355,6 +393,7 @@ export function Sidebar({ inputs, updateInput }: SidebarProps) {
         </Section>
       </div>
     </div>
+    </>
   )
 }
 

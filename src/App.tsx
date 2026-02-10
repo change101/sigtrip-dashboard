@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useDashboard } from '@/hooks/useDashboard'
 import { Sidebar } from '@/components/Sidebar'
 import { MetricCard } from '@/components/MetricCard'
@@ -20,21 +21,23 @@ import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { getCategoryData, getScenarios, getRunwaySensitivity } from '@/lib/calculations'
 import { formatCurrency, formatNumber } from '@/lib/utils'
-import { 
-  TrendingDown, 
-  Calendar, 
-  Target, 
-  Users, 
+import {
+  TrendingDown,
+  Calendar,
+  Target,
+  Users,
   Building2,
   Wallet,
   BarChart3,
   PieChart,
   TrendingUp,
-  LineChart
+  LineChart,
+  Menu
 } from 'lucide-react'
 
 function App() {
   const { inputs, metrics, updateInput } = useDashboard()
+  const [sidebarOpen, setSidebarOpen] = useState(false)
   
   const categoryData = getCategoryData(metrics)
   const scenarios = getScenarios(metrics.monthlyBurn)
@@ -75,12 +78,34 @@ function App() {
 
   return (
     <div className="flex h-screen bg-slate-50">
-      <Sidebar inputs={inputs} updateInput={updateInput} />
-      
-      <div className="flex-1 overflow-y-auto">
-        <div className="p-6 lg:p-10 max-w-[1920px] mx-auto">
-          {/* Header */}
-          <div className="mb-8">
+      <Sidebar
+        inputs={inputs}
+        updateInput={updateInput}
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+      />
+
+      <div className="flex-1 overflow-y-auto w-full">
+        {/* Mobile header bar */}
+        <div className="sticky top-0 z-30 bg-white/90 backdrop-blur-sm border-b border-slate-200 px-4 py-3 flex items-center gap-3 lg:hidden">
+          <button
+            onClick={() => setSidebarOpen(true)}
+            className="p-2 -ml-2 rounded-lg hover:bg-slate-100 text-slate-600"
+            aria-label="Open filters"
+          >
+            <Menu className="w-5 h-5" />
+          </button>
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center">
+              <BarChart3 className="w-4 h-4 text-white" />
+            </div>
+            <h1 className="text-base font-bold text-slate-900">Sigtrip Fundraise Planner</h1>
+          </div>
+        </div>
+
+        <div className="p-4 sm:p-6 lg:p-10 max-w-[1920px] mx-auto">
+          {/* Header - hidden on mobile (shown in sticky bar instead) */}
+          <div className="mb-8 hidden lg:block">
             <div className="flex items-center gap-3 mb-2">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center">
                 <BarChart3 className="w-5 h-5 text-white" />
@@ -94,7 +119,7 @@ function App() {
           </div>
           
           {/* KPI Row 1 - Financial */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 mb-6">
             <MetricCard
               title="Monthly Burn"
               value={formatCurrency(metrics.monthlyBurn)}
@@ -126,7 +151,7 @@ function App() {
           </div>
           
           {/* KPI Row 2 - Revenue */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-8">
             <MetricCard
               title="Revenue Model"
               value={inputs.revenueModel === 'saas' ? 'SaaS' : inputs.revenueModel === 'commission' ? 'Commission' : 'Hybrid'}
@@ -152,7 +177,7 @@ function App() {
           </div>
           
           {/* Charts Grid - Full Width Layout */}
-          <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 mb-6">
+          <div className="grid grid-cols-1 xl:grid-cols-12 gap-4 sm:gap-6 mb-4 sm:mb-6">
             {/* Row 1 - Budget (4 cols) & Runway (8 cols) */}
             <div className="xl:col-span-4">
               <BudgetBreakdownChart data={categoryData} />
@@ -166,7 +191,7 @@ function App() {
             </div>
           </div>
           
-          <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 mb-6">
+          <div className="grid grid-cols-1 xl:grid-cols-12 gap-4 sm:gap-6 mb-4 sm:mb-6">
             {/* Row 2 - Costs (4 cols), Hotels (4 cols), Team (4 cols) */}
             <div className="xl:col-span-4">
               <CostBreakdownChart data={costBreakdownData} />
@@ -191,7 +216,7 @@ function App() {
             </div>
           </div>
           
-          <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 mb-6">
+          <div className="grid grid-cols-1 xl:grid-cols-12 gap-4 sm:gap-6 mb-4 sm:mb-6">
             {/* Row 3 - Revenue (8 cols) & Revenue Mix (4 cols) */}
             <div className="xl:col-span-8">
               <RevenueChart 
@@ -212,7 +237,7 @@ function App() {
             </div>
           </div>
           
-          <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 mb-6">
+          <div className="grid grid-cols-1 xl:grid-cols-12 gap-4 sm:gap-6 mb-4 sm:mb-6">
             {/* Row 4 - Cumulative (4 cols), Sensitivity (8 cols) */}
             <div className="xl:col-span-4">
               <CumulativeChart 
@@ -285,8 +310,8 @@ function App() {
             <CardHeader className="border-b border-slate-100">
               <CardTitle className="text-lg font-semibold text-slate-900">Unit Economics Metrics</CardTitle>
             </CardHeader>
-            <CardContent className="p-6">
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            <CardContent className="p-4 sm:p-6">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
                 <div className="p-4 rounded-xl bg-gradient-to-br from-blue-50 to-blue-100/50 border border-blue-100">
                   <p className="text-xs text-blue-600 font-medium uppercase tracking-wide mb-1">LTV (Annual)</p>
                   <p className="text-xl font-bold text-slate-900">

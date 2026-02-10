@@ -56,6 +56,27 @@
   background: hsl(var(--muted-foreground) / 0.5);
 }
 
+/* Smooth scrolling on iOS */
+html {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Prevent body scroll when sidebar is open on mobile */
+body.sidebar-open {
+  overflow: hidden;
+}
+
+@media (max-width: 640px) {
+  /* Smaller chart text on mobile */
+  .recharts-text {
+    font-size: 10px !important;
+  }
+
+  .recharts-legend-item-text {
+    font-size: 11px !important;
+  }
+}
+
 /* Slider styles */
 [data-slot="slider-track"] {
   background: hsl(var(--muted)) !important;

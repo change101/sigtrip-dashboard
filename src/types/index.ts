@@ -37,6 +37,7 @@ export interface DashboardInputs {
   commissionPct: number
   avgBookingsPerHotel: number
   avgBookingValue: number
+  avgLengthOfStay: number
 
   // Other
   legalAccountingAnnual: number

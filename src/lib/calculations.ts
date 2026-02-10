@@ -90,8 +90,8 @@ export function calculateMetrics(inputs: DashboardInputs): CalculatedMetrics {
   const commissionRevenueByMonth: number[] = []
   const monthlyRevenue = hotelsByMonth.map((hotels) => {
     const saasRevenue = hotels * inputs.monthlySubscription
-    const commissionRevenue = hotels * inputs.avgBookingsPerHotel * inputs.avgBookingValue * 
-      (inputs.commissionPct / 100)
+    const commissionRevenue = hotels * inputs.avgBookingsPerHotel * inputs.avgBookingValue *
+      inputs.avgLengthOfStay * (inputs.commissionPct / 100)
     saasRevenueByMonth.push(saasRevenue)
     commissionRevenueByMonth.push(commissionRevenue)
     return saasRevenue + commissionRevenue
@@ -104,16 +104,16 @@ export function calculateMetrics(inputs: DashboardInputs): CalculatedMetrics {
   
   // Annual projections
   const annualSaas = inputs.targetHotels * inputs.monthlySubscription * 12
-  const annualCommission = inputs.targetHotels * inputs.avgBookingsPerHotel * inputs.avgBookingValue * 
-    (inputs.commissionPct / 100) * 12
+  const annualCommission = inputs.targetHotels * inputs.avgBookingsPerHotel * inputs.avgBookingValue *
+    inputs.avgLengthOfStay * (inputs.commissionPct / 100) * 12
   const totalAnnualRevenue = annualSaas + annualCommission
   
   const finalHotels = hotelsByMonth[hotelsByMonth.length - 1]
-  const arr = finalHotels * inputs.monthlySubscription * 12 + 
-    finalHotels * inputs.avgBookingsPerHotel * inputs.avgBookingValue * (inputs.commissionPct / 100) * 12
+  const arr = finalHotels * inputs.monthlySubscription * 12 +
+    finalHotels * inputs.avgBookingsPerHotel * inputs.avgBookingValue * inputs.avgLengthOfStay * (inputs.commissionPct / 100) * 12
   
-  const avgMonthlyRevenuePerHotel = inputs.monthlySubscription + 
-    inputs.avgBookingsPerHotel * inputs.avgBookingValue * (inputs.commissionPct / 100)
+  const avgMonthlyRevenuePerHotel = inputs.monthlySubscription +
+    inputs.avgBookingsPerHotel * inputs.avgBookingValue * inputs.avgLengthOfStay * (inputs.commissionPct / 100)
   
   // Analysis
   const peoplePct = annualBurn > 0 ? (catPeople / annualBurn) * 100 : 0
