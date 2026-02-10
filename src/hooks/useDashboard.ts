@@ -34,6 +34,7 @@ const defaultInputs: DashboardInputs = {
   commissionPct: 2,
   avgBookingsPerHotel: 30,
   avgBookingValue: 300,
+  avgLengthOfStay: 3,
   
   legalAccountingAnnual: 50,
   travelEventsMonthly: 8,

@@ -462,7 +462,7 @@ export function CostBreakdownChart({ data }: CostBreakdownChartProps) {
       </CardHeader>
       <CardContent className="pt-4">
         <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={sortedData} layout="vertical" margin={{ top: 5, right: 30, left: 100, bottom: 5 }}>
+          <BarChart data={sortedData} layout="vertical" margin={{ top: 5, right: 20, left: 80, bottom: 5 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" horizontal={false} />
             <XAxis 
               type="number" 

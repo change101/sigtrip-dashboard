@@ -26,7 +26,7 @@ export function MetricCard({
       "bg-white border-slate-200 shadow-sm hover:shadow-md transition-shadow",
       className
     )}>
-      <CardContent className="p-4">
+      <CardContent className="p-3 sm:p-4">
         <div className="flex items-start justify-between">
           <div className="flex-1 min-w-0">
             <p className="text-xs text-slate-500 font-medium uppercase tracking-wide truncate">
@@ -34,7 +34,7 @@ export function MetricCard({
             </p>
             <div className="flex items-center gap-2 mt-1">
               <p className={cn(
-                "text-xl font-bold text-slate-900",
+                "text-lg sm:text-xl font-bold text-slate-900",
                 valueClassName
               )}>
                 {value}
